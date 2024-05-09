@@ -1,37 +1,44 @@
-//RASHID AMIN
-//23P-0678
-//BS(CS)-2A
-//STUDENT INFORMATION SYSTEM
-//CODER : RASHID AMIN
-//PURPOSE : STORE STUDENT INFORMATION
-//          DISPLAY STUDENT INFORMATION
-//          SEARCH DIFFERENT STUDENT INFORMATION 
+/*   TEACHER NAME: MUHAMMAD UMER HAROON
+   RASHID AMIN - 23P-0678
+   MUHAMMAD ABDULLAH - 23P-0055
+
+SECTION: BS(CS)-2A
+STUDENT INFORMATION SYSTEM
+CODER : RASHID AMIN , MUHAMMAD ABDULLAH
+PURPOSE : STORE STUDENT INFORMATION
+          DISPLAY STUDENT INFORMATION
+          SEARCH DIFFERENT STUDENT INFORMATION 
+          VIEW STUDENT RECORDS
+          CALCULATE GRADE    */
 #include <stdio.h>
+
 // Function prototypes
 void addStudent();
 void viewStudentRecords();
 void searchStudent();
+
 void calculateGrade(float pf_marks, float calculus_marks, float physics_marks);
 
 int main() {
     int choice = 0;
 
+
     do {
         // Display Menu
-        printf("\n\n\n\t\t\t\t************* Student Information System **************\n\n\n\n");
+        printf("\n\n\n\t\t\t\t***** Student Information System ******\n\n\n\n");
         printf("\t\t\t1. Add Student Information\n\n");
         printf("\t\t\t2. View Student Information\n\n");
         printf("\t\t\t3. Search Student\n\n");
-        printf("\t\t\t4. Exit \n\n");
-        // Get user input
-        printf("\t\t\tChoose between options (1-4)\t\t");
+        printf("\t\t\t5. Exit \n\n");
+         // Get user input
+        printf("\t\t\tChoose between options (1-5)\t\t");
         scanf("%d", &choice);
         printf("\n\t------------------------------------------------------------------------------\n\n");
-
+       
         // Check for valid input and newline characters
         if (choice < 1 || choice > 5) {
             // Invalid input
-            printf("\t\t\tInvalid Input! Enter a number between 1 and 4 only.\n");
+            printf("\t\t\tInvalid Input! Enter a number between 1 and 5 only.\n");
             // Clear any remaining characters in the input buffer
             while (getchar() != '\n');
         } else {
@@ -49,8 +56,10 @@ int main() {
                     searchStudent();
                     break;
 
-                
-                case 4:
+            
+              
+
+                case 5:
                     printf("\t\t\tExiting the program..............\n\n\n");
                     break;
 
@@ -64,9 +73,9 @@ int main() {
 
     return 0;
 }
-
 // Function to add student information
 void addStudent() {
+    FILE *studentInfoFile;
     char studentName[100];
     char lastName[100];
     int studentID, studentBatch;
@@ -76,7 +85,13 @@ void addStudent() {
 
     do {
         // Add Student Information
-        printf("\n\n\n\t\t\t\t************* Add Student Information *************\n\n\n\n");
+        printf("\n\n\n\t\t\t\t***** Add Student Information *****\n\n\n\n");
+        studentInfoFile = fopen("StudentInfo.txt", "a");
+
+        if (studentInfoFile == NULL) {
+            printf("\t\t\tCan't Open file\n");
+            return;
+        }
 
         printf("\t\t\tEnter Student Name\t");
         scanf("%s", studentName);
@@ -90,61 +105,72 @@ void addStudent() {
         scanf("%011lld", &contactNumber);
         printf("\t\t\tEnter marks for Programming Fundamentals\t");
         scanf("%f", &pf_marks);
-        if(pf_marks>100 || pf_marks<0){
-            printf("\t\t\tMarks can only be between 0 to 100\t\t");
-            while(pf_marks>100 || pf_marks<0){
-                printf("\n\t\t\tPlease enter marks again:\t\t");
-                scanf("%f",&pf_marks);
-            }
-        }
+         if(pf_marks>100 || pf_marks<0){
+         printf("\t\t\tMarks can only be between 0 to 100\t\t");
+         while(pf_marks>100 || pf_marks<0){
+         printf("\n\t\t\tPlease enter marks again:\t\t");
+         scanf("%f",&pf_marks);
+             }
+         }
         printf("\t\t\tEnter marks for Calculus:\t");
         scanf("%f", &calculus_marks);
         if(calculus_marks>100 || calculus_marks<0){
-            printf("\t\t\tMarks can only be between 0 to 100\t\t");
-            while(calculus_marks>100 || calculus_marks<0){
-                printf("\n\t\t\tPlease enter marks again:\t\t");
-                scanf("%f",&calculus_marks);
-            }
-        }
+         printf("\t\t\tMarks can only be between 0 to 100\t\t");
+         while(calculus_marks>100 || calculus_marks<0){
+         printf("\n\t\t\tPlease enter marks again:\t\t");
+         scanf("%f",&calculus_marks);
+         }
+         }
         printf("\t\t\tEnter marks of Physics:\t");
         scanf("%f", &physics_marks);
         if(physics_marks>100 || physics_marks<0){
-            printf("\t\t\tMarks can only be between 0 to 100\n");
-            while(physics_marks>100 || physics_marks<0){
-                printf("\n\t\t\tPlease enter marks again:\t\t");
-                scanf("%f",&physics_marks);
-            }
-        }
+         printf("\t\t\tMarks can only be between 0 to 100\n");
+         while(physics_marks>100 || physics_marks<0){
+         printf("\n\t\t\tPlease enter marks again:\t\t");
+         scanf("%f",&physics_marks);
+         }
+         }
         printf("\n\t------------------------------------------------------------------------------\n\n");
-        printf("\t\t\tRecord Stored Successfully\n");
+        printf("\t\t\t");
+
+        // Check if file is opened successfully
+        if (studentInfoFile == NULL) {
+            printf("\t\t\tCan't Open file\n");
+        } else {
+            printf("\t\t\tRecord Stored Successfully\n");
+            // Write student information to the file
+ fprintf(studentInfoFile, "%s %s %d %011lld %d %.2f %.2f %.2f\n", studentName, lastName, studentID, contactNumber, studentBatch, pf_marks, calculus_marks, physics_marks);
+            fclose(studentInfoFile);
+        }
 
         printf("\t\t\tDo You want to add another student (y/n)\t");
         scanf(" %c", &userChoice);
     } while (userChoice == 'y' || userChoice == 'Y');
 }
+
 // Function to display student records
 void viewStudentRecords() {
+    FILE *studentInfoFile;
     char studentName[100];
     char lastName[100];
     int studentID, studentBatch;
     long long int contactNumber;
     float pf_marks, calculus_marks, physics_marks;
 
-    // Display Student Records
-    printf("\n\n\t\t\t\t************* Students Record *************\n\n\n");
+    studentInfoFile = fopen("StudentInfo.txt", "r");
 
-    // Open StudentInfo.txt file for reading
-    FILE *studentInfoFile = fopen("StudentInfo.txt", "r");
+    // Display Student Records
+    printf("\n\n\t\t\t\t***** Students Record *****\n\n\n");
 
     if (studentInfoFile == NULL) {
         printf("\t\tFile open failed\n");
-        return;
+       return;
     } else {
         printf("\n\t----------------------------------------------------------------------------\n\n");
     }
 
     // Read and display student information from the file
-    while (fscanf(studentInfoFile, "%s %s %d %lld %d %f %f %f", studentName, lastName, &studentID, &contactNumber, &studentBatch, &pf_marks, &calculus_marks, &physics_marks) != EOF) {
+    while (fscanf(studentInfoFile, "%s %s %d %011lld %d %f %f %f", studentName, lastName, &studentID, &contactNumber, &studentBatch, &pf_marks, &calculus_marks, &physics_marks) != EOF) {
         printf("\n\t\t\tStudent Name:           %s\n", studentName);
         printf("\n\t\t\tEnter Last Name         %s\n", lastName);
         printf("\n\t\t\tStudent Batch:           %d\n", studentBatch);
@@ -153,16 +179,17 @@ void viewStudentRecords() {
         printf("\n\t\t\tProgramming Marks:     %.2f\n", pf_marks);
         printf("\n\t\t\tCalculus Marks:          %.2f\n", calculus_marks);
         printf("\n\t\t\tPhysics Marks:           %.2f\n", physics_marks);
-        // calculateGrade(pf_marks, calculus_marks, physics_marks);
+        calculateGrade(pf_marks, calculus_marks, physics_marks);
         printf("\n");
         printf("\n\t----------------------------------------------------------------------------\n\n");
     }
 
-    // Close the file
     fclose(studentInfoFile);
 }
 
+// Function to search for a student by ID
 void searchStudent() {
+    FILE *studentInfoFile;
     char studentName[100];
     char lastName[100];
     int enteredID;
@@ -171,15 +198,13 @@ void searchStudent() {
     float pf_marks, calculus_marks, physics_marks;
     int found = 0;
 
-    printf("\n\n\n\t\t\t\t\t************* Search Student *************\n\n\n\n");
+    studentInfoFile = fopen("StudentInfo.txt", "r");
+    printf("\n\n\n\t\t\t\t\t***** Search Student *****\n\n\n\n");
     printf("\n\t\t\tEnter Student ID:\t");
     scanf("%d", &enteredID);
 
-    // Open StudentInfo.txt file for reading
-    FILE *studentInfoFile = fopen("StudentInfo.txt", "r");
-
     // Search for a student by ID and display the information
-    while (fscanf(studentInfoFile, "%s %s %d %lld %d %f %f %f", studentName, lastName, &studentID, &contactNumber, &studentBatch, &pf_marks, &calculus_marks, &physics_marks) != EOF) {
+    while (fscanf(studentInfoFile, "%s %s %d %011lld %d %f %f %f", studentName, lastName, &studentID, &contactNumber, &studentBatch, &pf_marks, &calculus_marks, &physics_marks) != EOF) {
         if (enteredID == studentID) {
             found = 1;
             printf("\n\t\t\tStudent Name:        %s\n", studentName);
@@ -190,7 +215,7 @@ void searchStudent() {
             printf("\n\t\t\tProgramming  Marks:  %.2f\n", pf_marks);
             printf("\n\t\t\tCalculus Marks:       %.2f\n", calculus_marks);
             printf("\n\t\t\tPhysics Marks:        %.2f\n", physics_marks);
-            // calculateGrade(pf_marks, calculus_marks, physics_marks);
+            calculateGrade(pf_marks, calculus_marks, physics_marks);
             printf("\n");
             printf("\n\t----------------------------------------------------------------------------\n\n");
         }
@@ -201,9 +226,9 @@ void searchStudent() {
         printf("\t\t\tRecord Not found\n");
     }
 
-    // Close the file
     fclose(studentInfoFile);
 }
+
 
 // Function to calculate grade based on marks
 void calculateGrade(float pf_marks, float calculus_marks, float physics_marks) {
@@ -227,8 +252,8 @@ void calculateGrade(float pf_marks, float calculus_marks, float physics_marks) {
         printf("\n\t\t\tGrade for PF\t\t     C\n");
     } else if (pf_marks >= 58.0) {
         printf("\n\t\t\tGrade for PF:\t\t    C-\n");
-    } else if (pf_marks >= 54.0) {   
-         printf("\n\t\t\tGrade for PF\t\t     D+\n");
+    } else if (pf_marks >= 54.0) {
+        printf("\n\t\t\tGrade for PF\t\t     D+\n");
     } else if (pf_marks >= 50.0) {
         printf("\n\t\t\tGrade for PF\t\t     D\n");
     } else {
